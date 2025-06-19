@@ -5,24 +5,26 @@ import argparse
 import os
 import re
 
-# لا حاجة لتعديل sys.path يدوياً بعد الآن،
-# لأننا سنثبت Helfetch كحزمة بايثون قياسية في site-packages.
-# وبالتالي، Python سيعرف مكانها تلقائياً.
+# بما أننا الآن سنثبت مجلد 'helfetch' بالكامل كحزمة بايثون في site-packages،
+# Python هيقدر يلاقي الموديولات بشكل مباشر.
+# وبالتالي، مفيش داعي لتعديل sys.path يدوياً هنا.
 
 # استيراد الدالات من وحدات جمع المعلومات
-# الآن، سنستورد من Helfetch.core لأن Helfetch أصبح حزمة
-from Helfetch.core.system_info import get_system_info, get_inspirational_quote
-from Helfetch.core.hardware_info import get_hardware_info
-from Helfetch.core.desktop_info import get_desktop_info
-from Helfetch.core.network_info import get_network_info
+# لازم نحدد "helfetch." قبل اسم كل موديول فرعي، لأنها جزء من حزمة "helfetch"
+from helfetch.core.system_info import get_system_info, get_inspirational_quote
+from helfetch.core.hardware_info import get_hardware_info
+from helfetch.core.desktop_info import get_desktop_info
+from helfetch.core.network_info import get_network_info
 
 # استيراد وحدات العرض والتنسيق
-from Helfetch.display.ascii_art import get_ascii_logo, COLORS
-from Helfetch.display.formatter import format_info_output
+from helfetch.display.ascii_art import get_ascii_logo, COLORS
+from helfetch.display.formatter import format_info_output
 
 # استيراد الإعدادات الافتراضية
-from Helfetch.config.default_config import DEFAULT_COLORS
+from helfetch.config.default_config import DEFAULT_COLORS
 
+# استيراد من مجلد utils الجديد
+# from helfetch.utils.helpers import some_helper_function # لو محتاج تستورد حاجة من utils
 
 def main():
     """
