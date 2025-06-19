@@ -5,33 +5,23 @@ import argparse
 import os
 import re
 
-# هذه هي إضافة المسار الصحيح للموديولات.
-# بناءً على PKGBUILD، ملف helfetch.py سيكون في /usr/bin/helfetch
-# وباقي الموديولات (core, display, config) ستكون في /usr/lib/helfetch/
-# لذا، نحتاج لجعل Python يبحث في /usr/lib/helfetch/
-# os.path.dirname(__file__) يعطينا '/usr/bin'
-# os.path.join(os.path.dirname(__file__), '..', 'lib', 'helfetch') يقوم ببناء المسار:
-# 1. يذهب إلى مجلد /usr/bin/
-# 2. يصعد مستوى واحد (..) ليصبح في /usr/
-# 3. يدخل إلى مجلد lib/
-# 4. يدخل إلى مجلد helfetch/
-# ليصبح المسار النهائي هو /usr/lib/helfetch/
-project_modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lib', 'helfetch'))
+# لا حاجة لتعديل sys.path يدوياً بعد الآن،
+# لأننا سنثبت Helfetch كحزمة بايثون قياسية في site-packages.
+# وبالتالي، Python سيعرف مكانها تلقائياً.
 
-# إضافة المسار إلى sys.path (قائمة المسارات التي يبحث فيها بايثون عن الموديولات)
-if project_modules_path not in sys.path:
-    sys.path.insert(0, project_modules_path)
+# استيراد الدالات من وحدات جمع المعلومات
+# الآن، سنستورد من Helfetch.core لأن Helfetch أصبح حزمة
+from Helfetch.core.system_info import get_system_info, get_inspirational_quote
+from Helfetch.core.hardware_info import get_hardware_info
+from Helfetch.core.desktop_info import get_desktop_info
+from Helfetch.core.network_info import get_network_info
 
-# استيراد الدالات من الوحدات مباشرة (بما أن المسار الآن صحيح)
-from core.system_info import get_system_info, get_inspirational_quote
-from core.hardware_info import get_hardware_info
-from core.desktop_info import get_desktop_info
-from core.network_info import get_network_info
+# استيراد وحدات العرض والتنسيق
+from Helfetch.display.ascii_art import get_ascii_logo, COLORS
+from Helfetch.display.formatter import format_info_output
 
-from display.ascii_art import get_ascii_logo, COLORS
-from display.formatter import format_info_output
-
-from config.default_config import DEFAULT_COLORS
+# استيراد الإعدادات الافتراضية
+from Helfetch.config.default_config import DEFAULT_COLORS
 
 
 def main():
