@@ -1,5 +1,5 @@
 helfetch/
-├── myfetch.py
+├── helfetch.py
 ├── core/
 │   ├── __init__.py
 │   ├── system_info.py
