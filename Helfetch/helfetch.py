@@ -2,36 +2,37 @@
 
 import sys
 import argparse
-import os # جديد: لاستخدام os.path
+import os
 import re
 
-# جديد: إضافة المسار الحالي للملفات للمسارات اللي Python بيدور فيها
-# ده بيضمن إن Python هيلاقي مجلدات core, display, config
-# os.path.dirname(__file__) بيدي مسار ملف helfetch.py نفسه
-# os.path.join بيركب المسار صح
-# os.path.abspath بيحول المسار لمسار كامل
-# sys.path.insert(0, ...) بيضيف المسار في أول قائمة المسارات
+# التأكد من أن مسار البرنامج موجود في sys.path
+# هذا السطر يضيف المسار الذي يتواجد فيه ملف helfetch.py نفسه إلى مسارات البحث
+# مما يسمح له بالعثور على المجلدات الشقيقة مثل core و display و config
 script_dir = os.path.abspath(os.path.dirname(__file__))
-# لو المجلد الرئيسي Helfetch تم نسخه لـ /usr/lib/helfetch/
-# يبقى احنا محتاجين نضيف /usr/lib/helfetch/ نفسها
-# المسار ده بيكون '/usr/lib/helfetch'
-sys.path.insert(0, script_dir)
+# عند التثبيت، يكون helfetch.py في /usr/bin/helfetch
+# والمجلدات الأخرى (core, display, config) تكون في /usr/lib/helfetch/
+# لذلك، يجب أن نضيف مسار /usr/lib/helfetch/ إلى sys.path
+# نعتمد هنا على أننا نسخنا محتويات مجلد Helfetch (وليس Helfetch نفسه) إلى /usr/lib/helfetch/
+# وبالتالي، مسار الموديولات سيكون /usr/lib/helfetch/core/system_info.py وهكذا.
+# المسار الصحيح لإضافته هو مسار المجلد الذي يحتوي على 'core', 'display', 'config'.
+# في سياق الـ PKGBUILD، يتم نسخ مجلد Helfetch/ إلى /usr/lib/helfetch/
+# لذا، الموديولات ستكون مباشرة داخل /usr/lib/helfetch/
+sys.path.insert(0, os.path.join(os.path.dirname(script_dir), 'lib', 'helfetch'))
+
 
 # استيراد الدالات من وحدات جمع المعلومات
-# تم تغيير الاستيراد ليصبح من 'Helfetch.core' بدلاً من 'core'
-from Helfetch.core.system_info import get_system_info, get_inspirational_quote
-from Helfetch.core.hardware_info import get_hardware_info
-from Helfetch.core.desktop_info import get_desktop_info
-from Helfetch.core.network_info import get_network_info
+# تم تعديل الاستيراد ليكون مباشرة من اسم الوحدة الفرعية
+from core.system_info import get_system_info, get_inspirational_quote
+from core.hardware_info import get_hardware_info
+from core.desktop_info import get_desktop_info
+from core.network_info import get_network_info
 
 # استيراد وحدات العرض والتنسيق
-# تم تغيير الاستيراد ليصبح من 'Helfetch.display' و 'Helfetch.ascii_art'
-from Helfetch.display.ascii_art import get_ascii_logo, COLORS
-from Helfetch.display.formatter import format_info_output
+from display.ascii_art import get_ascii_logo, COLORS
+from display.formatter import format_info_output
 
 # استيراد الإعدادات الافتراضية
-# تم تغيير الاستيراد ليصبح من 'Helfetch.config'
-from Helfetch.config.default_config import DEFAULT_COLORS
+from config.default_config import DEFAULT_COLORS
 
 
 def main():
