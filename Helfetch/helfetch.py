@@ -1,22 +1,38 @@
 #!/usr/bin/env python3
 
-# helfetch.py
-
 import sys
 import argparse
+import os # جديد: لاستخدام os.path
 import re
+
+# جديد: إضافة المسار الحالي للملفات للمسارات اللي Python بيدور فيها
+# ده بيضمن إن Python هيلاقي مجلدات core, display, config
+# os.path.dirname(__file__) بيدي مسار ملف helfetch.py نفسه
+# os.path.join بيركب المسار صح
+# os.path.abspath بيحول المسار لمسار كامل
+# sys.path.insert(0, ...) بيضيف المسار في أول قائمة المسارات
+script_dir = os.path.abspath(os.path.dirname(__file__))
+# لو المجلد الرئيسي Helfetch تم نسخه لـ /usr/lib/helfetch/
+# يبقى احنا محتاجين نضيف /usr/lib/helfetch/ نفسها
+# المسار ده بيكون '/usr/lib/helfetch'
+sys.path.insert(0, script_dir)
+
 # استيراد الدالات من وحدات جمع المعلومات
-from core.system_info import get_system_info, get_inspirational_quote
-from core.hardware_info import get_hardware_info
-from core.desktop_info import get_desktop_info
-from core.network_info import get_network_info
+# تم تغيير الاستيراد ليصبح من 'Helfetch.core' بدلاً من 'core'
+from Helfetch.core.system_info import get_system_info, get_inspirational_quote
+from Helfetch.core.hardware_info import get_hardware_info
+from Helfetch.core.desktop_info import get_desktop_info
+from Helfetch.core.network_info import get_network_info
 
 # استيراد وحدات العرض والتنسيق
-from display.ascii_art import get_ascii_logo, COLORS
-from display.formatter import format_info_output
+# تم تغيير الاستيراد ليصبح من 'Helfetch.display' و 'Helfetch.ascii_art'
+from Helfetch.display.ascii_art import get_ascii_logo, COLORS
+from Helfetch.display.formatter import format_info_output
 
 # استيراد الإعدادات الافتراضية
-from config.default_config import DEFAULT_COLORS
+# تم تغيير الاستيراد ليصبح من 'Helfetch.config'
+from Helfetch.config.default_config import DEFAULT_COLORS
+
 
 def main():
     """
@@ -24,7 +40,6 @@ def main():
     It collects all system information, formats it with the logo, and prints it.
     Supports command-line arguments for customization.
     """
-    # 1. إعداد محلل وسائط سطر الأوامر
     parser = argparse.ArgumentParser(
         description="A custom system information fetcher for Helwan Linux."
     )
@@ -35,16 +50,13 @@ def main():
     )
     args = parser.parse_args()
 
-    # 2. جمع جميع معلومات النظام
     system_data = get_system_info()
     hardware_data = get_hardware_info()
     desktop_data = get_desktop_info()
     network_data = get_network_info()
     
-    # 3. جلب الاقتباس الملهم
     inspirational_quote = get_inspirational_quote()
 
-    # دمج كل المعلومات في قاموس واحد
     all_info = {
         **system_data,
         **hardware_data,
@@ -52,12 +64,10 @@ def main():
         **network_data
     }
 
-    # 4. الحصول على شعار Helwan Linux ASCII Art (إذا لم يتم تعطيله)
     helwan_logo = None
     if not args.no_logo:
         helwan_logo = get_ascii_logo("Helwan Linux")
 
-    # 5. تنسيق ودمج المعلومات مع الشعار والاقتباس
     formatted_output = format_info_output(
         info_data=all_info,
         logo_lines=helwan_logo,
@@ -66,10 +76,8 @@ def main():
         info_value_color=DEFAULT_COLORS["info_value_color"]
     )
 
-    # 6. طباعة الإخراج النهائي
     print(formatted_output)
 
-# نقطة الدخول الرئيسية للبرنامج
 if __name__ == "__main__":
     try:
         main()
