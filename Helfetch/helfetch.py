@@ -5,26 +5,28 @@ import argparse
 import os
 import re
 
-# بما أننا الآن سنثبت مجلد 'helfetch' بالكامل كحزمة بايثون في site-packages،
-# Python هيقدر يلاقي الموديولات بشكل مباشر.
-# وبالتالي، مفيش داعي لتعديل sys.path يدوياً هنا.
+# **تعديل هنا:** إضافة مسار مجلد السكريبت إلى sys.path
+# هذا يسمح لـ helfetch.py بإيجاد المجلدات الفرعية (core, display, إلخ)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(script_dir)
 
 # استيراد الدالات من وحدات جمع المعلومات
-# لازم نحدد "helfetch." قبل اسم كل موديول فرعي، لأنها جزء من حزمة "helfetch"
-from helfetch.core.system_info import get_system_info, get_inspirational_quote
-from helfetch.core.hardware_info import get_hardware_info
-from helfetch.core.desktop_info import get_desktop_info
-from helfetch.core.network_info import get_network_info
+# بما أننا أضفنا المسار، يمكننا الاستيراد مباشرة بأسماء المجلدات
+from core.system_info import get_system_info, get_inspirational_quote
+from core.hardware_info import get_hardware_info
+from core.desktop_info import get_desktop_info
+from core.network_info import get_network_info
 
 # استيراد وحدات العرض والتنسيق
-from helfetch.display.ascii_art import get_ascii_logo, COLORS
-from helfetch.display.formatter import format_info_output
+from display.ascii_art import get_ascii_logo, COLORS
+from display.formatter import format_info_output
 
 # استيراد الإعدادات الافتراضية
-from helfetch.config.default_config import DEFAULT_COLORS
+from config.default_config import DEFAULT_COLORS
 
 # استيراد من مجلد utils الجديد
-from helfetch.utils.helpers import some_helper_function # لو محتاج تستورد حاجة من utils
+# from utils.helpers import some_helper_function # لو محتاج تستورد دالة معينة من helpers.py
+
 
 def main():
     """
