@@ -24,7 +24,7 @@ from helfetch.display.formatter import format_info_output
 from helfetch.config.default_config import DEFAULT_COLORS
 
 # استيراد من مجلد utils الجديد
-# from helfetch.utils.helpers import some_helper_function # لو محتاج تستورد حاجة من utils
+from helfetch.utils.helpers import some_helper_function # لو محتاج تستورد حاجة من utils
 
 def main():
     """
