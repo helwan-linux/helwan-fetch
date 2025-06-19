@@ -2,7 +2,7 @@
 
 import os
 import subprocess
-
+import re
 def get_desktop_info():
     """
     Collects information about the Desktop Environment (DE), Window Manager (WM),
