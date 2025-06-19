@@ -2,7 +2,7 @@
 
 import sys
 import argparse
-
+import re
 # استيراد الدالات من وحدات جمع المعلومات
 from core.system_info import get_system_info, get_inspirational_quote
 from core.hardware_info import get_hardware_info
