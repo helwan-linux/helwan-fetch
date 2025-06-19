@@ -3,15 +3,12 @@
 import sys
 import argparse
 import os
-import re
 
-# **تعديل هنا:** إضافة مسار مجلد السكريبت إلى sys.path
-# هذا يسمح لـ helfetch.py بإيجاد المجلدات الفرعية (core, display, إلخ)
+# إضافة مسار مجلد السكريبت إلى sys.path
 script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(script_dir)
 
-# استيراد الدالات من وحدات جمع المعلومات
-# بما أننا أضفنا المسار، يمكننا الاستيراد مباشرة بأسماء المجلدات
+# استيراد الدوال من وحدات جمع المعلومات
 from core.system_info import get_system_info, get_inspirational_quote
 from core.hardware_info import get_hardware_info
 from core.desktop_info import get_desktop_info
@@ -23,10 +20,6 @@ from display.formatter import format_info_output
 
 # استيراد الإعدادات الافتراضية
 from config.default_config import DEFAULT_COLORS
-
-# استيراد من مجلد utils الجديد
-# from utils.helpers import some_helper_function # لو محتاج تستورد دالة معينة من helpers.py
-
 
 def main():
     """
