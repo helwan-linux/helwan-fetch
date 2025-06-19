@@ -5,33 +5,28 @@ import argparse
 import os
 import re
 
-# التأكد من أن مسار البرنامج موجود في sys.path
-# هذا السطر يضيف المسار الذي يتواجد فيه ملف helfetch.py نفسه إلى مسارات البحث
-# مما يسمح له بالعثور على المجلدات الشقيقة مثل core و display و config
-script_dir = os.path.abspath(os.path.dirname(__file__))
-# عند التثبيت، يكون helfetch.py في /usr/bin/helfetch
-# والمجلدات الأخرى (core, display, config) تكون في /usr/lib/helfetch/
-# لذلك، يجب أن نضيف مسار /usr/lib/helfetch/ إلى sys.path
-# نعتمد هنا على أننا نسخنا محتويات مجلد Helfetch (وليس Helfetch نفسه) إلى /usr/lib/helfetch/
-# وبالتالي، مسار الموديولات سيكون /usr/lib/helfetch/core/system_info.py وهكذا.
-# المسار الصحيح لإضافته هو مسار المجلد الذي يحتوي على 'core', 'display', 'config'.
-# في سياق الـ PKGBUILD، يتم نسخ مجلد Helfetch/ إلى /usr/lib/helfetch/
-# لذا، الموديولات ستكون مباشرة داخل /usr/lib/helfetch/
-sys.path.insert(0, os.path.join(os.path.dirname(script_dir), 'lib', 'helfetch'))
+# بناء المسار الصحيح للمجلد الذي يحتوي على الموديولات (core, display, config)
+# عند التثبيت بواسطة PKGBUILD:
+# - helfetch.py يتم وضعه في /usr/bin/
+# - مجلدات core, display, config يتم وضعها داخل /usr/lib/helfetch/
+# لذا، نحتاج لإضافة /usr/lib/helfetch/ إلى مسارات البحث الخاصة ببايثون.
+# os.path.dirname(__file__) يعطينا /usr/bin/
+# os.path.join(os.path.dirname(__file__), '..', 'lib', 'helfetch')
+# هذا يبدأ من /usr/bin/، يصعد مستوى واحد (..) ليصبح /usr/، ثم يدخل lib/helfetch/
+# مما يعطينا المسار النهائي /usr/lib/helfetch/
+module_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lib', 'helfetch'))
+if module_path not in sys.path:
+    sys.path.insert(0, module_path)
 
-
-# استيراد الدالات من وحدات جمع المعلومات
-# تم تعديل الاستيراد ليكون مباشرة من اسم الوحدة الفرعية
+# الآن يمكن الاستيراد مباشرة بأسماء الموديولات الفرعية
 from core.system_info import get_system_info, get_inspirational_quote
 from core.hardware_info import get_hardware_info
 from core.desktop_info import get_desktop_info
 from core.network_info import get_network_info
 
-# استيراد وحدات العرض والتنسيق
 from display.ascii_art import get_ascii_logo, COLORS
 from display.formatter import format_info_output
 
-# استيراد الإعدادات الافتراضية
 from config.default_config import DEFAULT_COLORS
 
 
