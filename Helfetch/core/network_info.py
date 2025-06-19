@@ -3,7 +3,7 @@
 import subprocess
 import requests # هنحتاج المكتبة دي
 import json # عشان نتعامل مع بيانات JSON من الـ API
-
+import re
 def get_network_info():
     """
     Collects network-related information including local IP, public IP, ISP, and location.
